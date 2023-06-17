@@ -35,3 +35,8 @@ def spiralOrder(matrix: list[list[int]]) -> list[int]:
         row += directions[directionIndex][0]
         column += directions[directionIndex][1]
     return order
+
+#反转字符串中的单词
+# s="hello world"
+# print(s.split())
+# print(" ".join(s.split()[::-1]))

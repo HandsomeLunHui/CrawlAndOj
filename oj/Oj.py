@@ -40,3 +40,41 @@ def spiralOrder(matrix: list[list[int]]) -> list[int]:
 # s="hello world"
 # print(s.split())
 # print(" ".join(s.split()[::-1]))
+
+# 递归函数：调用自身与结束条件
+def hanoi(n:int,a:str,b:str,c:str)->None:
+    # 终止条件
+    if n == 1:
+        print(a,"->",c)
+    else:
+        hanoi(n-1,a,c,b)
+        print(a,"->",c)
+        hanoi(n-1,b,a,c)
+
+# 顺序查找
+def linear_search(array:list,target:int)->int:
+    # for i in range(len(array)):
+    #     if array[i] == target:
+    #         return i
+    # return -1
+    for index,val in enumerate(array):
+        if val == target:
+            return index
+    return -1
+
+# 二分查找
+def binary_search(array:list,target:int)->int:
+    left=0
+    right=len(array)-1
+    while left <= right:
+        middle=(left+right)//2
+        if array[middle] == target:
+            return middle
+        elif array[middle] < target:
+            left=middle+1
+        else:
+            right=middle-1
+    return -1
+
+if __name__ == '__main__':
+    hanoi(3,"A","B","C")

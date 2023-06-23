@@ -76,5 +76,64 @@ def binary_search(array:list,target:int)->int:
             right=middle-1
     return -1
 
+# 冒泡排序
+def bubble_sort(array:list)->list:
+    for i in range(len(array)-1):
+        for j in range(len(array)-1-i):
+            if array[j] > array[j+1]:
+                array[j],array[j+1]=array[j+1],array[j]
+                print(array)
+
+# 选择排序
+def selection_sort(array:list)->list:
+    for i in range(len(array)-1):
+        # 记录最小值索引
+        min_index=i
+        for j in range(i+1,len(array)):
+            if array[min_index]>array[j]:
+                min_index=j
+        array[i],array[min_index]=array[min_index],array[i]
+        print(array)
+    return array
+
+# 数组与列表
+# 1.数组元素类型要相同 2.数组长度固定
+
+# 列表实现栈
+class Stack:
+    def __init__(self):
+        self.stack=[]
+    def push(self,value):
+        self.stack.append(value)
+    def pop(self):
+        return self.stack.pop()
+    def peek(self):
+        if  self.stack:
+            return self.stack[-1]
+        else:
+            return None
+    def is_empty(self):
+        return self.stack == []
+
+# 括号匹配问题
+def bracket_match(s:str)->bool:
+    stack=Stack()
+    for i in s:
+        if i == "(":
+            stack.push(")")
+        elif i == "[":
+            stack.push("]")
+        elif i== "{":
+            stack.push("}")
+        elif stack.is_empty() or stack.peek() != i:
+            return False
+        else:
+            stack.pop()
+    return True
+
+
 if __name__ == '__main__':
-    hanoi(3,"A","B","C")
+    # arry=[2,5,1,3,4,7,10,5,6]
+    # print(arry)
+    bracket="([{}])"
+    print(bracket_match(bracket))

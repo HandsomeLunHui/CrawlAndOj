@@ -13,7 +13,7 @@ class DBHelper:
         self.cur = self.conn.cursor()
 
     # 执行不需要数据返回的语句 插入更新删除操作需要调用commit
-    def  execute(self, sql, params=None):
+    def execute(self, sql, params=None):
         try:
             self.cur.execute(sql, params)
             self.conn.commit()
@@ -23,7 +23,7 @@ class DBHelper:
             self.conn.rollback()
 
     # 执行需要返回数据的语句
-    def  query(self, sql, params=None):
+    def query(self, sql, params=None):
         self.cur.execute(sql, params)
         result = self.cur.fetchall()
         return result

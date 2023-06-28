@@ -131,6 +131,42 @@ def bracket_match(s:str)->bool:
             stack.pop()
     return True
 
+maze=[[]]
+
+dirs=[
+    lambda x,y: (x+1,y),
+    lambda x,y: (x-1,y),
+    lambda x,y: (x,y+1),
+    lambda x,y: (x,y-1)
+]
+
+def maze_path(x1,y1,x2,y2):
+    stack=[]
+    stack.append((x1,y1))
+    while stack:
+        curNode=stack[-1]
+        if curNode[0]==x2 and curNode[1]==y2:
+            print("已经走到了终点")
+            for i in stack:
+                print(i)
+            return True
+        for dir in dirs:
+            nextNode=dir(curNode[0],curNode[1])
+            # 如果下一条路能走通
+            if maze[nextNode[0][nextNode[1]]]==0:
+                stack.append(nextNode)
+                # 表示已经走过了
+                maze[nextNode[0][nextNode[1]]]=2
+                break
+        else:
+            maze[curNode[0][curNode[1]]]=2
+            stack.pop()
+    else:
+        print("没有终点")
+        return False
+
+
+
 
 if __name__ == '__main__':
     # arry=[2,5,1,3,4,7,10,5,6]

@@ -131,6 +131,7 @@ def bracket_match(s:str)->bool:
             stack.pop()
     return True
 
+# 深度优先迷宫寻路问题
 maze=[[]]
 
 dirs=[
@@ -165,7 +166,30 @@ def maze_path(x1,y1,x2,y2):
         print("没有终点")
         return False
 
+# python 链表
+class Node:
+    def __init__(self,item):
+        self.item=item
+        self.next=None
 
+# 创建链表
+def create_link_list(arr):
+    head=Node(arr[0])
+    for item in arr[1:]:
+        node=Node(item)
+        node.next=head
+        head=node
+    return head
+
+# 尾插法
+def create_link_list_tail(arr):
+    head=Node(arr[0])
+    tail=head
+    for item in arr[1:]:
+        node=Node(item)
+        tail.next=node
+        tail=node
+    return head
 
 
 if __name__ == '__main__':

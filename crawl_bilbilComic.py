@@ -207,6 +207,9 @@ class Comic:
         self.detailUrl = 'https://manga.bilibili.com/twirp/comic.v1.Comic/ComicDetail?device=pc&platform=web'
         self.threads = 30
 
+        # 用于测试b站反爬是否封ip
+        self.proxy=''
+
         # 属性
         self.title = 'Nope'
         self.authorName = []

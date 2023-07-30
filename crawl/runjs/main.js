@@ -1,4 +1,5 @@
 
+//加载js脚本
 const CryptoJS=require('./crypto')
 
 function getToken(player) {

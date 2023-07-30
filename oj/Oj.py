@@ -191,6 +191,88 @@ def create_link_list_tail(arr):
         tail=node
     return head
 
+# 实现linux文件目录
+class Node:
+    def __init__(self,name,type='dir'):
+        self.name=name
+        self.type=type
+        self.child=[]
+        self.parent=None
+
+    def __repr__(self):
+        return self.name
+
+class FileSystemTree:
+    def __init__(self):
+        self.root=Node('/')
+        self.now=self.root
+
+    def mkdir(self,name):
+        if name[-1]!='/':
+            name+='/'
+        node=Node(name)
+        self.now.child.append(node)
+        node.parent=self.now
+
+    def ls(self):
+        return self.now.child
+
+    def cd(self,name):
+        if name[-1]!='/':
+            name+='/'
+        if name=='../':
+            self.now=self.now.parent
+            return
+        for child in self.now.child:
+            if child.name==name:
+                self.now=child
+                return
+        raise Exception("no such dir")
+
+# 二叉树
+class BiTreeNode:
+    def __init__(self,data):
+        self.data=data
+        self.left=None
+        self.right=None
+
+# 二叉树的遍历
+# 前序：中 左 右
+# 中序：左 中 右
+# 后序：左 右 中
+
+def pre_order_traversal(root):
+    if root:
+        print(root.data)
+        pre_order_traversal(root.left)
+        pre_order_traversal(root.right)
+
+def in_order_traversal(root):
+    if root:
+        in_order_traversal(root.left)
+        print(root.data)
+        in_order_traversal(root.right)
+
+def post_order_traversal(root):
+    if root:
+        post_order_traversal(root.left)
+        post_order_traversal(root.right)
+        print(root.data)
+
+# 二叉树的层序遍历
+def level_order_traversal(root):
+    from collections import deque
+    queue=deque()
+    if root:
+        queue.append(root)
+    while queue:
+        node=queue.popleft()
+        print(node.data)
+        if node.left:
+            queue.append(node.left)
+        if node.right:
+            queue.append(node.right)
+
 
 if __name__ == '__main__':
     # arry=[2,5,1,3,4,7,10,5,6]

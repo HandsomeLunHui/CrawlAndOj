@@ -5,6 +5,14 @@ import random
 import requests
 from Crypto.Cipher import AES
 import logging
+import sys
+import os
+import urllib3
+import warnings
+ # 禁用警告
+warnings.filterwarnings("ignore", category=urllib3.exceptions.InsecureRequestWarning)
+ # 在进行HTTPS请求之前继续执行您的代码
+
 
 # 流程：根据输入关键字(可输入作者 区分要下载的歌曲)获取search列表
 # 从search列表中获取id进行解密
@@ -75,7 +83,6 @@ class CloudMusic:
     'playerid': '75198147',
 }
 
-
         self.searchUrl='https://music.163.com/weapi/cloudsearch/get/web?csrf_token='
         self.MusicUrl="https://music.163.com/weapi/song/enhance/player/url/v1?csrf_token="
 
@@ -128,15 +135,53 @@ class CloudMusic:
         return params, encSecKey
 
     def getUrlJson(self,msg,url):
+        logging.info("encrypting....")
         encText, encSecKey = self.get_param(msg, self.e, self.f, self.g)
         data = {
             'params': encText,
             'encSecKey': encSecKey
         }
         res = requests.post(url, headers=self.searchHeaders, data=data, verify=False)
-        if res.status_code == 200:
-            return res.json()
-        return {}
+
+        try:
+            id, url = self.parseJson(res.json())
+            if res.status_code == 200 and url is not None:
+                logging.info("encrypt success")
+                return res.json()
+            else:
+                logging.error("encrypt success but not url,please check musicId")
+                sys.exit()
+        except Exception as e:
+            logging.error("encrypt failed,please check musicId")
+            sys.exit()
+    def parseJson(self,musicJson:dict):
+        if musicJson.get('code')==200:
+            logging.info('parse success')
+            id=musicJson['data'][0]['id']
+            url=musicJson['data'][0]['url']
+            return id,url
+        else:
+            logging.info('parse failed,please check musicJson')
+            sys.exit()
+    def getContent(self,url):
+        resp=requests.get(url)
+        if resp.status_code==200:
+            logging.info("get content success")
+            return resp.content
+        else:
+            logging.error("get content failed,please check url")
+            sys.exit()
+
+    def saveMusic(self,content,name):
+        if content is not None:
+            # 是否有存储音乐的文件夹
+            os.path.exists("music") or os.mkdir("music")
+            with open("music/"+name+".mp3",'wb') as f:
+                f.write(content)
+            logging.info("dowload success")
+        else:
+            logging.error("获取music content失败")
+
 
 # headers = {
 #     'authority': 'music.163.com',
@@ -209,7 +254,23 @@ class CloudMusic:
 #     return params,encSecKey
 
 if __name__ == '__main__':
+    userinput=input("请输入音乐名称 音乐id：")
+
+    musicName=userinput.split(" ")[0]
+    musicId=userinput.split(" ")[1]
+
+    logging.info("start")
+
     wy=CloudMusic()
-    msg=wy.setGetSearchMsg('美丽的鳍')
-    print(msg)
-    print(wy.getUrlJson(msg,wy.searchUrl))
+    msg=wy.setGetMusicMsg(musicId)
+
+    logging.info("get msg %s"%msg)
+
+    resp=wy.getUrlJson(msg,wy.MusicUrl)
+
+    id,url=wy.parseJson(resp)
+    content=wy.getContent(url)
+
+    wy.saveMusic(content,musicName)
+
+    logging.info('process end...')
